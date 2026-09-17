@@ -1,24 +1,37 @@
 //
-//  ContentView.swift
+//  hasSeenOnboardingScreen.swift
 //  loginScreen
 //
-//  Created by Garima Gupta on 21/08/26.
+//  Created by Garima Gupta on 16/09/26.
 //
 
 import SwiftUI
 
-struct ContentView: View {
+struct hasSeenOnboardingScreen: View {
+    
+    @AppStorage("hasSeenOnboarding")
+    private var hasSeenOnboarding = false
+    
+    @State private var navigateToMainScreen = false
+    
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+         
+        NavigationStack{
+            
+            Text("this is onboarding screen")
+            
+            Button{
+                self.hasSeenOnboarding = true
+                self.navigateToMainScreen = true
+            }label:{
+                Text("get started")
+            }
+        }.navigationBarBackButtonHidden()
+            .navigationDestination(
+                isPresented: self.$navigateToMainScreen){mainLoginScreen()}
+          
+        
     }
 }
 
-#Preview {
-    ContentView()
-}

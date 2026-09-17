@@ -16,7 +16,6 @@ class passwordScreenViewModel{
     
     var parentViewModel: signupScreenViewmodel
     
-    
     //form user fields
     
     var password = ""
@@ -39,7 +38,7 @@ class passwordScreenViewModel{
         }
         
         if !AuthManager.shared.strongPassword(self.password){
-            self.errorMessage = "*p assword must contain at least one uppercase letter, one lowercase letter, one number, one special character"
+            self.errorMessage = "*password must contain at least one uppercase letter, one lowercase letter, one number, one special character"
             return
         }
         
@@ -56,9 +55,15 @@ class passwordScreenViewModel{
             
             let accountCreateSuccess = await createAccountAPI()
             
-            print("navigating to the dashborad")
-            navigateToDashboard = true
+            if accountCreateSuccess{
+                print("navigating to the dashborad")
+                navigateToDashboard = true
+            }else{
+                print("not able to set password")
+            }
+            
         }
+    }
         
         //function specifically for hitting the api of the creating the password
         
@@ -71,10 +76,18 @@ class passwordScreenViewModel{
             
             do {
                 
-                try await authService.createPassword(
+                let response = try await authService.createPassword(
                     request: request,
                     token: parentViewModel.token)
+                
                 print("password set successfully")
+                
+                appStorageData.shared.accessToken = response.token
+                appStorageData.shared.refreshToken = response.refreshToken
+                            
+                print("acess token: ", response.token )
+                print("refresh token: ", response.refreshToken)
+                
                 return true
                 
             } catch{
@@ -82,38 +95,10 @@ class passwordScreenViewModel{
                 print("password not set")
                 self.errorMessage = "could not set password"
                 return false
-            }
-            
-        }
-        
-        //main and final sign up api
-        
-        func signUpAPI(signupScreenViewModel: signupScreenViewmodel) async -> Bool{
-            
-            let request = createAccountRequest(
-                email: signupScreenViewModel.userEmail,
-                mode: "signup",
-                firstName: signupScreenViewModel.firstName,
-                lastName: signupScreenViewModel.lastName,
-                phone: signupScreenViewModel.phoneNumber,
-                company: signupScreenViewModel.companyName)
-            
-            do{
-                
-                try await authService.createAccount(request: request)
-                print("account created successfully")
-                self.errorMessage = ""
-                return true
-                
-            }catch{
-                
-                if let nsError = error as NSError? {
-                    self.errorMessage = nsError.localizedDescription
-                }
-                return false
                 
             }
+            
         }
         
     }
-}
+

@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import Observation
 
+@Observable
+@MainActor
 class AuthManager {
 
     static let shared = AuthManager()

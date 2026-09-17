@@ -74,3 +74,23 @@ struct otpSendingResponse: Codable{
     let message: String
 }
 
+//token resposse after user successfully creating a new account
+
+struct setPasswordResponse: Codable {
+    let success: Bool
+    let message: String
+    let token: String
+    let expiresIn: Int
+    let refreshToken: String
+    let refreshExpiresIn: Int
+    let user: User
+}
+
+struct User: Codable {
+    let id: String
+    let name: String
+    let email: String
+    let roles: [String]
+    let isVerified: Bool
+   
+}

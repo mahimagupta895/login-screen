@@ -132,7 +132,8 @@ class signupScreenViewmodel{
         
         //making a json object request
         
-        let request = otpVerificationRequest(email: self.userEmail,
+        let request = otpVerificationRequest(
+                                email: self.userEmail,
                                  otp: self.otp,
                                  deviceId: "postman-device-1",
                                  deviceName: "Postman")

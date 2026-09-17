@@ -153,7 +153,7 @@ class AuthService {
     
     // func for creating the password for a new user
     
-    func createPassword(request: createpasswordRequest, token: String) async throws {
+    func createPassword(request: createpasswordRequest, token: String) async throws -> setPasswordResponse {
         
         guard let url = URL(
                 string: "https://general-staging.framesense.ai/api/auth/mobile/set-password"
@@ -196,6 +196,12 @@ class AuthService {
                     ]
                 )
             }
+        
+        let decoder = JSONDecoder()
+        
+        let decodedResponse = try decoder.decode(setPasswordResponse.self, from: data)
+        
+        return decodedResponse
         
     }
     
