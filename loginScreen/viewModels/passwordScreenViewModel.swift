@@ -16,6 +16,8 @@ class passwordScreenViewModel{
     
     var parentViewModel: signupScreenViewmodel
     
+    var isLoading = false
+    
     //form user fields
     
     var password = ""
@@ -53,7 +55,11 @@ class passwordScreenViewModel{
         
         Task{
             
+            self.isLoading = true
+            
             let accountCreateSuccess = await createAccountAPI()
+            
+            self.isLoading = false
             
             if accountCreateSuccess{
                 print("navigating to the dashborad")

@@ -527,4 +527,23 @@ enum CompanyType: String{
 
 
 
-// chanes
+// loader
+
+struct loader: View{
+    
+    var body: some View{
+        
+        Color.black
+            .opacity(0.5)
+            .ignoresSafeArea()
+        
+        ProgressView()
+                    .padding(20)
+                    .background(.white)
+                    .cornerRadius(12)
+    }
+    
+   
+}
+
+

@@ -16,7 +16,6 @@ struct loginScreenApp: App {
             
             rootView()
             
-            
         }
     }
 }

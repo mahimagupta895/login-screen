@@ -38,6 +38,7 @@ class signupScreenViewmodel{
     var navigateToPassword = false
     var otpSentMessage = ""
     var otpSentAlert: Bool = false
+    var isLoading = false
     
     var companyStatus: CompanyType?
     
@@ -69,7 +70,11 @@ class signupScreenViewmodel{
             } else {
                 errorMessage = ""
                 Task {
+                    
+                    self.isLoading = true
                     await self.requestOTPSignUp()
+                    self.isLoading = false
+                    
                 }
             }
 
@@ -79,7 +84,11 @@ class signupScreenViewmodel{
                 errorMessage = "*enter valid OTP"
             } else {
                 Task {
+                    
+                    self.isLoading = true
                     await self.otpVerificationSignin()
+                    self.isLoading = false
+                    
                 }
             }
         }

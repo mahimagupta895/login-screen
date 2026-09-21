@@ -31,47 +31,54 @@ struct passwordScreen: View {
     
     var body: some View {
         
-        VStack(alignment: .leading, spacing:16){
+        ZStack{
             
-            Text("Create a secure password for your account.")
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.system(size: 16))
-                .foregroundColor(Color(red: 0.27, green: 0.27, blue: 0.31))
-                .fontWeight(.regular)
+            VStack(alignment: .leading, spacing:16){
+                
+                Text("Create a secure password for your account.")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.system(size: 16))
+                    .foregroundColor(Color(red: 0.27, green: 0.27, blue: 0.31))
+                    .fontWeight(.regular)
+                
+                passwordPlaceholder(password: self.$viewModel.password,
+                                    passwordState: "Create Password",
+                                    promptText: "Enter your password",
+                                    showPassword: $showPassword, isRequired: true)
+                
+                passwordPlaceholder(password: self.$viewModel.confirmPassword,
+                                    passwordState: "Confirm Password",
+                                    promptText: "Re-enter your password",
+                                    showPassword: $showConfirmPassword,
+                                    isRequired: true)
+                
+                Spacer()
+                
+                Text(self.viewModel.errorMessage)
+                    .font(.system(size: 12))
+                    .foregroundColor(.red)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                footerButton(title: "Continue",
+                             image: nil,
+                             action: {self.viewModel.createAccount()})
+                
+                
+            }.padding(16)
+                .navigationTitle("Create Your Password")
+                .navigationBarBackButtonHidden(false)
+                .onAppear{ navigationTitleDesign() }
+                .navigationDestination(
+                    isPresented: self.$viewModel.navigateToDashboard
+                ) {
+                    homeDashboard()
+                }
             
-            passwordPlaceholder(password: self.$viewModel.password,
-                                passwordState: "Create Password",
-                                promptText: "Enter your password",
-                                showPassword: $showPassword, isRequired: true)
-            
-            passwordPlaceholder(password: self.$viewModel.confirmPassword,
-                                passwordState: "Confirm Password",
-                                promptText: "Re-enter your password",
-                                showPassword: $showConfirmPassword,
-                                isRequired: true)
-            
-            Spacer()
-            
-            Text(self.viewModel.errorMessage)
-                .font(.system(size: 12))
-                .foregroundColor(.red)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            footerButton(title: "Continue",
-                         image: nil,
-                         action: {self.viewModel.createAccount()})
-            
-            
-        }.padding(16)
-            .navigationTitle("Create Your Password")
-            .navigationBarBackButtonHidden(false)
-            .onAppear{ navigationTitleDesign() }
-            .navigationDestination(
-                isPresented: self.$viewModel.navigateToDashboard
-            ) {
-                homeDashboard()
+            if self.viewModel.isLoading{
+                loader()
             }
-        
+            
+        }
     }
 }
 
