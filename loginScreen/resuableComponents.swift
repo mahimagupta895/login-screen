@@ -48,7 +48,7 @@ struct emailPlaceholder: View {
             
             HStack(spacing: 0){
                 
-                Text("Email")
+                Text("Email Address")
                     .font(.system(size: 16))
                     .foregroundColor(Color(red: 0.27, green: 0.27, blue: 0.31))
                     .fontWeight(.medium)
@@ -547,3 +547,272 @@ struct loader: View{
 }
 
 
+//dimming background
+struct DimmingOverlay: View {
+   
+    let opacity: Double
+    let dismissOnTap: Bool
+    let onDismiss: () -> Void
+    
+    var body: some View{
+        
+        Color.black
+            .opacity(opacity)
+            .ignoresSafeArea()
+            .onTapGesture {
+                guard dismissOnTap else { return }
+
+                onDismiss()
+            }
+            .transition(.opacity)
+            .zIndex(1)
+        
+    }
+    
+}
+
+
+//calender for the homedashborad
+
+struct calender: View {
+
+    @Binding var selectedDate: Date
+
+       //let onClearTap: () -> Void
+       //let onApplyTap: () -> Void
+
+    var body: some View {
+
+        
+            VStack{
+                
+                
+                
+                DatePicker(
+                    "Select Date",
+                    selection: $selectedDate,
+                    displayedComponents: [.date]
+                )
+                .datePickerStyle(.graphical)
+                .labelsHidden()
+                .tint(appColors.buttonOrangeColor)
+
+
+                HStack(spacing: 10) {
+
+                    // MARK: - Clear Button
+
+                    Button {
+                        //onClearTap()
+                    } label: {
+
+                        Text("Clear")
+                            .foregroundColor(
+                                appColors.placeHolderbarDarkGrayColor
+                            )
+                            .font(.system(size: 16))
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 55)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.white)
+                                    .stroke(
+                                        appColors.placeHolderbarDarkGrayColor,
+                                        lineWidth: 2
+                                    )
+                            )
+                    }
+
+                    // MARK: - Apply Button
+
+                    Button {
+                        //onApplyTap()
+                    } label: {
+
+                        Text("Apply")
+                            .foregroundColor(.white)
+                            .font(.system(size: 16))
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 55)
+                            .background(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(
+                                        appColors.buttonOrangeColor
+                                    )
+                            )
+                    }
+                }.padding(.horizontal, 20)
+                    .padding(.bottom, 50)
+            }.background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.white)
+    
+            )
+        
+       
+    }
+}
+
+struct filterPopup: View {
+    
+    var body: some View {
+        
+        VStack(alignment: .leading){
+            
+            Text("FILTER")
+                .font(.system(size: 14))
+                .fontWeight(.bold)
+                .foregroundColor(appColors.placeHolderbarPromptDarkGrayColor)
+                .padding(10)
+            
+            Divider()
+            
+            Button{
+                
+            }label:{
+                Text("In Progress (0)")
+                    .font(.system(size: 18))
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                
+            }
+            .padding(10)
+            
+            Divider()
+            
+            Button{
+                
+            }label:{
+                Text("Completed (0)")
+                    .font(.system(size: 18))
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                
+            }
+            .padding(10)
+            
+            
+        }.background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color(.white))
+        )
+        .frame(width: 250)
+        
+    }
+}
+
+struct copysimplePlaceholder: View{
+    
+    let userInput: Binding<String>
+    let placeHolderType: String
+    let promptText: String
+    let isRequired: Bool
+    
+    var body: some View {
+        
+        VStack(spacing: 6){
+            
+            HStack(spacing: 0){
+                
+                
+                Text(placeHolderType)
+                    .font(.system(size: 16))
+                    .foregroundColor(Color(red: 0.27, green: 0.27, blue: 0.31))
+                    .fontWeight(.medium)
+                
+                if isRequired{
+                    Text("*")
+                        .font(.system(size: 16))
+                        .foregroundColor(.red)
+                        .fontWeight(.bold)
+                }
+                
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            
+            HStack{
+                
+                TextField(
+                    "",
+                    text: userInput,
+                    prompt:
+                        Text(promptText)
+                        .foregroundColor(.gray)
+                ).padding(.leading, 10)
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray, lineWidth: 2)
+                            .fill(Color(red: 0.95, green: 0.95, blue: 0.93))
+                    )
+                
+                Image("copyImage")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .padding(15)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.gray, lineWidth: 2)
+                            .fill(Color(red: 0.95, green: 0.95, blue: 0.93))
+                    )
+                
+            }
+            
+        }
+        
+    }
+}
+
+struct photoUploadPlaceholder{
+    
+    let userInput: Binding<String>
+    let placeHolderType: String
+    let promptText: String
+    let isRequired: Bool
+    
+    var body: some View {
+        
+        VStack(spacing: 6){
+            
+            HStack(spacing: 0){
+                
+                
+                Text(placeHolderType)
+                    .font(.system(size: 16))
+                    .foregroundColor(Color(red: 0.27, green: 0.27, blue: 0.31))
+                    .fontWeight(.medium)
+                
+                if isRequired{
+                    Text("*")
+                        .font(.system(size: 16))
+                        .foregroundColor(.red)
+                        .fontWeight(.bold)
+                }
+                
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            
+           
+            
+            TextField(
+                "",
+                text: userInput,
+                prompt:
+                    Text(promptText)
+                    .foregroundColor(.gray)
+            ).padding(.leading, 10)
+                .frame(maxWidth: .infinity, minHeight: 50)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.gray, lineWidth: 2)
+                        .fill(Color(red: 0.95, green: 0.95, blue: 0.93))
+                )
+            
+        }
+        
+    }
+}
+
+#Preview {
+    profileScreen()
+}

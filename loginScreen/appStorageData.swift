@@ -19,6 +19,27 @@ final class appStorageData{
     @AppStorage("refeshToken")
     var refreshToken: String = ""
     
+    @AppStorage("userFirstName")
+    var userFirstName: String = ""
+    
+    @AppStorage("userLastName")
+    var userLastName: String = ""
+    
+    @AppStorage("phoneNumber")
+    var phoneNumber: String = ""
+    
+    @AppStorage("countryCode")
+    var countryCode: String = ""
+    
+    @AppStorage("companyName")
+    var companyName: String = ""
+    
+    @AppStorage("userEmail")
+    var userEmail: String = ""
+    
+    
+    
+    
     
     
 }

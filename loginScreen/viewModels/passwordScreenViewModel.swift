@@ -90,9 +90,14 @@ class passwordScreenViewModel{
                 
                 appStorageData.shared.accessToken = response.token
                 appStorageData.shared.refreshToken = response.refreshToken
+                
+                appStorageData.shared.userFirstName = response.user.name
                             
                 print("acess token: ", response.token )
                 print("refresh token: ", response.refreshToken)
+                print("user name: ", response.user.name)
+                print("user email: ", response.user.email)
+                
                 
                 return true
                 

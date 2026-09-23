@@ -109,8 +109,12 @@ struct mainLoginScreen: View {
                                 .fontWeight(.medium)
                         }
                         
-                        .navigationDestination(isPresented: $navigateToSignIn){signinScreen()}
-                        .navigationDestination(isPresented: $navigateToSignUp){signupScreen()}
+                        .navigationDestination(
+                            isPresented: $navigateToSignIn
+                        ){signinScreen()}
+                        .navigationDestination(
+                            isPresented: $navigateToSignUp
+                        ){signupScreen()}
                             
                         
                     }
