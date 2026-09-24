@@ -738,7 +738,8 @@ struct copysimplePlaceholder: View{
                     text: userInput,
                     prompt:
                         Text(promptText)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.black)
+                        .fontWeight(.bold)
                 ).padding(.leading, 10)
                     .frame(maxWidth: .infinity, minHeight: 50)
                     .background(
@@ -813,6 +814,8 @@ struct photoUploadPlaceholder{
     }
 }
 
-#Preview {
-    profileScreen()
+enum PhotoType: String{
+    case userProfilePhoto = "avatar"
+    case companyLogo = "logo"
 }
+

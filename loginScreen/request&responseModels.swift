@@ -8,6 +8,7 @@
 //these are the parameters that backend is actually expecting
 
 import Foundation
+import PhotosUI
 
 //request for the sign in request for already existing users
 
@@ -94,3 +95,41 @@ struct User: Codable {
     let isVerified: Bool
    
 }
+
+
+//this is the response recieved when the access token in passed to the API of the profile
+
+struct ProfileResponse: Codable {
+    let avatar: String
+    let firstName: String
+    let lastName: String
+    let phone: String
+    let email: String
+    let companyName: String
+    let companyAddress: String
+    let companyLogo: String
+    let organizationId: String
+    let joinCode: String
+    let editable: Editable
+}
+
+struct Editable: Codable {
+    let email: Bool
+    let companyName: Bool
+    let companyAddress: Bool
+    let companyLogo: Bool
+}
+
+
+//update profile request for the profile screen for editable screens
+
+struct UpdateProfileRequest: Codable {
+    
+    let firstName: String?
+    let lastName: String?
+    let phone: String?
+    let companyName: String?
+    let companyAddress: String?
+    
+}
+

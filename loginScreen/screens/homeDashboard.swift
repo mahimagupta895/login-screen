@@ -283,7 +283,7 @@ struct homeDashboard: View {
                 
                     .navigationDestination(
                         isPresented: self.$navigateToProfileScreen
-                    ){profileScreen()}
+                    ){profileScreen(token: appStorageData.shared.accessToken)}
                 
                     .overlayPresentation(
                         isPresented: self.$showSideMenuBar

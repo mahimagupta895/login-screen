@@ -8,6 +8,7 @@
 // this file actually talks to the backend
 
 import Foundation
+import PhotosUI
 
 class AuthService {
     
@@ -247,6 +248,184 @@ class AuthService {
             }
     }
     
+    
+    //function for the api to take the access token and give the response of the use
+
+        func fetchProfile(token: String) async throws -> ProfileResponse {
+
+            guard let url = URL(string: "https://general-staging.framesense.ai/api/mobile/profile") else {
+                throw URLError(.badURL)
+            }
+            
+            
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+
+            // Bearer token
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            // Response is JSON
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw URLError(.badServerResponse)
+            }
+
+            guard httpResponse.statusCode == 200 else {
+                throw URLError(.badServerResponse)
+            }
+
+            print(response)
+            
+            return try JSONDecoder().decode(ProfileResponse.self, from: data)
+        
+    }
+    
+    //function for updating the profile
+    
+    func updateProfile(
+        request: UpdateProfileRequest,
+        token: String
+    ) async throws {
+
+        guard let url = URL(
+            string: "https://general-staging.framesense.ai/api/mobile/profile"
+        ) else {
+            throw URLError(.badURL)
+        }
+
+        var urlRequest = URLRequest(url: url)
+
+        // 1. HTTP method
+        urlRequest.httpMethod = "PUT"
+
+        // 2. Token
+        urlRequest.setValue(
+            "Bearer \(token)",
+            forHTTPHeaderField: "Authorization"
+        )
+
+        // 3. Tell server we are sending JSON
+        urlRequest.setValue(
+            "application/json",
+            forHTTPHeaderField: "Content-Type"
+        )
+
+        // 4. Convert Swift model → JSON
+        urlRequest.httpBody = try JSONEncoder().encode(request)
+
+        // 5. Send request
+        let (data, response) = try await URLSession.shared.data(
+            for: urlRequest
+        )
+
+        // 6. Check response
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+
+        guard 200...299 ~= httpResponse.statusCode else {
+
+            print(
+                "PUT failed:",
+                httpResponse.statusCode,
+                String(data: data, encoding: .utf8) ?? ""
+            )
+
+            throw URLError(.badServerResponse)
+        }
+
+        print("Profile updated successfully")
+    }
+    
+
+
+//function for uploading user profile and company logo
+
+func uploadProfileImage(
+    image: UIImage,
+    token: String,
+    type: String
+) async throws {
+
+    guard let url = URL(
+        string: "https://general-staging.framesense.ai/api/mobile/profile/image"
+    ) else {
+        throw URLError(.badURL)
+    }
+
+    guard let imageData = image.jpegData(
+        compressionQuality: 0.8
+    ) else {
+        throw URLError(.cannotLoadFromNetwork)
+    }
+
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+
+    request.setValue(
+        "Bearer \(token)",
+        forHTTPHeaderField: "Authorization"
+    )
+
+    let boundary = "Boundary-\(UUID().uuidString)"
+
+    request.setValue(
+        "multipart/form-data; boundary=\(boundary)",
+        forHTTPHeaderField: "Content-Type"
+    )
+
+    var body = Data()
+
+    // file
+    body.append("--\(boundary)\r\n".data(using: .utf8)!)
+
+    body.append(
+        "Content-Disposition: form-data; name=\"file\"; filename=\"profile.jpg\"\r\n"
+            .data(using: .utf8)!
+    )
+
+    body.append(
+        "Content-Type: image/jpeg\r\n\r\n"
+            .data(using: .utf8)!
+    )
+
+    body.append(imageData)
+
+    body.append("\r\n".data(using: .utf8)!)
+
+    // type
+    body.append("--\(boundary)\r\n".data(using: .utf8)!)
+
+    body.append(
+        "Content-Disposition: form-data; name=\"type\"\r\n\r\n"
+            .data(using: .utf8)!
+    )
+
+    body.append("\(type)\r\n".data(using: .utf8)!)
+
+    body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+
+    request.httpBody = body
+
+    let (data, response) = try await URLSession.shared.data(
+        for: request
+    )
+
+    guard let httpResponse = response as? HTTPURLResponse else {
+        throw URLError(.badServerResponse)
+    }
+
+    print("Status:", httpResponse.statusCode)
+    print(String(data: data, encoding: .utf8) ?? "")
+
+    guard (200...299).contains(httpResponse.statusCode) else {
+        throw URLError(.badServerResponse)
+    }
 }
 
+}
 
