@@ -14,7 +14,7 @@ struct loginScreenApp: App {
         
         WindowGroup {
             
-            rootView()
+            homeDashboard()
             
         }
     }

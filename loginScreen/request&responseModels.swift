@@ -133,3 +133,15 @@ struct UpdateProfileRequest: Codable {
     
 }
 
+//delete api request
+
+struct DeleteUserProfileRequest: Codable{
+    
+    let confirm: Bool
+    
+}
+
+struct DeleteProfileResponse: Codable {
+    let success: Bool
+    let message: String
+}

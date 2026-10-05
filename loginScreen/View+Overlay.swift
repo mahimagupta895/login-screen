@@ -10,11 +10,11 @@ import SwiftUI
 
 extension View {
 
-    func overlayPresentation<OverlayContent: View>(
+    func overlayPresentation<OverlayScreen: View>(
         isPresented: Binding<Bool>,
         opacity: Double = 0.4,
         dismissOnTap: Bool = true,
-        @ViewBuilder content: @escaping () -> OverlayContent
+        @ViewBuilder content: @escaping () -> OverlayScreen
     ) -> some View {
 
         modifier(

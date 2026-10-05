@@ -10,6 +10,9 @@ struct rootView: View {
     
     @AppStorage("hasSeenOnboarding")
     private var hasSeenOnboarding = false
+
+    @AppStorage("accessToken")
+    private var accessToken = ""
     
     @State private var authManager = AuthManager.shared
     
@@ -23,7 +26,7 @@ struct rootView: View {
         //user has seen onboarding
         }else{
             
-            if appStorageData.shared.accessToken.isEmpty {
+            if accessToken.isEmpty {
                 
                 mainLoginScreen()
                 

@@ -41,6 +41,13 @@ class profileScreenViewModel{
     let accessToken : String
     var profile: ProfileResponse?
     
+    //flow for deeting the profile
+    var showDeleteProfileAlert: Bool = false
+    var showDeleteErrorAlert = false
+    var errorMessage = ""
+    var deleteStatus = false
+    var isDeleting = false
+    
     init(token: String){
         self.accessToken = token
     }
@@ -203,5 +210,52 @@ class profileScreenViewModel{
         
           await self.updateProfile()
       
+    }
+    
+    //function for deleting the prfile
+    
+    func deleteProfile() async {
+        guard !isDeleting else {
+            return
+        }
+
+        let request = DeleteUserProfileRequest(confirm: true)
+        errorMessage = ""
+        isDeleting = true
+
+        defer {
+            isDeleting = false
+        }
+
+        do {
+            let response = try await AuthService().deleteProfile(
+                request: request,
+                accessToken: accessToken
+            )
+
+            guard response.success else {
+                errorMessage = response.message
+                showDeleteErrorAlert = true
+                return
+            }
+
+            deleteStatus = true
+            appStorageData.shared.accessToken = ""
+            appStorageData.shared.refreshToken = ""
+        } catch {
+            print("Deleting profile failed", error)
+            deleteStatus = false
+            errorMessage = error.localizedDescription
+            showDeleteErrorAlert = true
+        }
+    }
+    
+    //function for deleting the user profile
+    
+    func deleteUserProfileTapped() {
+        
+        Task {
+            await self.deleteProfile()
+        }
     }
 }

@@ -2,10 +2,13 @@ import SwiftUI
 import PhotosUI
 
 struct profileScreen: View {
-    
+    @Environment(\.dismiss) private var dismiss
+
     let accessToken: String
     
     @State var viewModel: profileScreenViewModel
+    
+    
     
     init(token: String) {
         self.accessToken = token
@@ -338,6 +341,7 @@ struct profileScreen: View {
                     
                     Task {
                         await self.viewModel.updateProfile()
+                        dismiss()
                     }
                 }
             )
@@ -348,6 +352,8 @@ struct profileScreen: View {
             
             Button {
                 
+                self.viewModel.showDeleteProfileAlert = true
+                
             } label: {
                 
                 Text("Delete Profile")
@@ -356,6 +362,7 @@ struct profileScreen: View {
                     .fontWeight(.bold)
                     .underline()
             }
+            .disabled(self.viewModel.isDeleting)
         }
         .navigationBarBackButtonHidden(false)
         .navigationTitle("Edit Profile")
@@ -364,6 +371,33 @@ struct profileScreen: View {
         }
         .task {
             await viewModel.getProfile()
+        }
+        .alert(
+            "Delete Profile?",
+            isPresented: self.$viewModel.showDeleteProfileAlert
+        ){
+            
+            Button("Cancel" , role: .cancel){}
+            
+            Button("Delete" , role: .destructive){
+                
+                Task{
+                    await self.viewModel.deleteProfile()
+                }
+            }
+            
+        } message: {
+            Text("This permanently deletes your profile and cannot be undone.")
+        }
+        .alert(
+            "Could Not Delete Profile",
+            isPresented: self.$viewModel.showDeleteErrorAlert
+        ) {
+            Button("OK", role: .cancel) {
+                self.viewModel.errorMessage = ""
+            }
+        } message: {
+            Text(self.viewModel.errorMessage)
         }
     }
 }
